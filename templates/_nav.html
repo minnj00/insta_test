@@ -7,9 +7,9 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-link"  href="{% url 'posts:create'%}">Create</a>
-          <a class="nav-link" href="#">Features</a>
-          <a class="nav-link" href="#">Pricing</a>
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+          <a class="nav-link" href="{% url 'accounts:signup' %}">Signup</a>
+          <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+          <a class="nav-link disabled" aria-disabled="true">{{request.user}}</a>
         </div>
       </div>
     </div>
