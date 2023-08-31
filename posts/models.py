@@ -16,3 +16,11 @@ class Post(models.Model):
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+class Comment(models.Model):
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
