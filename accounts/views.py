@@ -70,13 +70,13 @@ def followers(request, username):
 
     user = User.objects.get(username=username)
     followers_list=user.followers.all()
-    # followers_name =[]
+    followers_name =[]
 
-    # for follower in followers_list:
-    #     User.objects.get(username=follow)
+    for follower in followers_list:
+        follwers_name += User.objects.get(username=follower.username)
 
 
     context = {
-        'followers_list':followers_list,
+        'followers_name':followers_name,
     }
     return render(request,'accounts/followers.html', context)
