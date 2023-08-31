@@ -29,7 +29,7 @@
                     <a href="{% url 'accounts:followers' username=user_info.username %}">팔로워</a>{{user_info.followers.all|length}}
                 </div>
                 <div class="col">
-                    팔로잉  {{user_info.followings.all|length}}
+                    <a href="{% url 'accounts:followings' username=user_info.username %}">팔로잉</a>{{user_info.followings.all|length}}
                 </div>
             </div>
         </div>
