@@ -9,20 +9,27 @@
                 <div class="col-3">
                     <a href="">{{user_info.username}}</a>
                 </div>
-            
-                <div class="col-4">
-                    <a href="">팔로우</a>
-                </div>
+                {% if user != user_info %}
+                    <div class="col-4">
+                        {% if user_info in user.followings.all %}
+                            <a href="{% url 'accounts:follow' username=user_info.username %}" class="btn btn-secondary btn-sm">팔로잉</a>
+                        {% else %}
+                            <a href="{% url 'accounts:follow' username=user_info.username %}" class="btn btn-primary btn-sm">팔로우</a>
+                        {% endif %}
+                    </div>    
+                {% endif %}
             </div>
+
             <div class="row">
                 <div class="col">
-                    게시물
+                    게시물 {{user_info.post_set.all|length}}
+                </div>
+                
+                <div class="col">
+                    팔로워 {{user_info.followers.all|length}}
                 </div>
                 <div class="col">
-                    팔로워
-                </div>
-                <div class="col">
-                    팔로잉
+                    팔로잉  {{user_info.followings.all|length}}
                 </div>
             </div>
         </div>
