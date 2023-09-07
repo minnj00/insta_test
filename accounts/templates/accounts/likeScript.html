@@ -1,0 +1,68 @@
+<script>
+    const likeButtons = document.querySelectorAll('i.heart')
+    // console.log(likeButtons)
+    likeButtons.forEach((likeButton)=>{
+        // console.log(likeButton)
+        likeButton.addEventListener('click', (event)=>{
+            let postId = event.target.dataset.postId
+            console.log(postId)
+
+            likeRequest(event.target, postId)
+
+        })
+    })
+
+   
+    
+    const likeNumbers = document.querySelectorAll('i.likenumber')
+    
+
+
+    // button, postId인자를 받는 함수 생성
+    let likeRequest = async (button, postId) => {
+        console.log(button, postId)
+        // django 서버에 요청을 보낸다
+        let likeURL = `/posts/${postId}/like-async/`
+        let response = await fetch(likeURL)
+        let result = await response.json() 
+        console.log(result)
+
+        // fetch 라는 부분이 비 동기적으로 실행이 될 것임(url을 요청하는 것이 오래 걸려서) 그래서 await를 붙여서 잠깐 기다려주세요 라고 얘기
+        // await 는 async와 같이 사용가능함 
+
+        // 함수가 실행이 되면 likeURL을 만들고 response에 fetch(likeURL)을 저장한다
+
+        
+        
+        // django 서버의 응답에 따라 좋아요 버튼을 수정한다.
+        if (result.status) {
+            button.classList.remove('bi-heart')
+            button.classList.add('bi-heart-fill')
+            button.style.color = 'red'
+            // likeNumbers.innerHTML = result.count
+            
+
+        } else {
+            button.classList.remove('bi-heart-fill')
+            button.classList.add('bi-heart')
+            button.style.color = 'black'
+            // likeNumbers.innerHTML = result.count
+            
+            
+        }
+
+        likeNumbers.forEach((likeNumber) => {
+        // console.log(likeNumber.dataset.postId)
+        if (likeNumber.dataset.postId === postId) {
+            likeNumber.innerHTML = result.count
+
+        } else{}
+        })
+
+    }
+
+   
+
+
+
+</script>

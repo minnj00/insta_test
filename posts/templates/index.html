@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block body %}
+    
     {% for post in posts %}
         {% include '_card.html' %}
     {% endfor %}
+
+    
+    {% include 'likeScript.html' %}
+    {% include 'commentScript.html'%}
+   
+
+
 {% endblock %}

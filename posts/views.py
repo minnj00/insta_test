@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Post
+from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponse
 
 # Create your views here.
 
@@ -56,4 +57,47 @@ def like(request, post_id):
 
     return redirect('posts:index')
 
+def like_async(request, post_id):
+    # context = {
+    #     'message': post_id,
+    # }
+
+    user = request.user
+    post = Post.objects.get(id=post_id)
+
+    if user in post.like_users.all():
+        post.like_users.remove(user)
+        status = False # 좋아요 취소
+    else:
+        post.like_users.add(user)
+        status = True # 좋아요 실행
+
+    context = {
+        'status': status,
+        'count':len(post.like_users.all())
+    }
+    
+    return JsonResponse(context) # 문서를 return 하지 않고 그 데이터만 return 함.
+
+
+def comment_update(request, post_id, id):
+    comment = Comment.objects.get(id=id)
+    if request.method == 'POST':
+        form = CommentForm(reequest.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save()
+            context = {
+                'newContent': comment.content,
+                'user': comment.user.username,
+
+            }
+        else: 
+            context = {
+                'message': 'fail'
+            }
+        return JsonResponse(context)
+    else:
+        form = CommentForm(instance=comment)
+
+    return HttpResponse(form)
 

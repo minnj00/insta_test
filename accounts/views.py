@@ -4,6 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 # Create your views here.
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
 
 def signup(request):
     if request.method == 'POST':
@@ -65,21 +66,49 @@ def logout(request):
     return redirect('accounts:login')
     
     
-def followers(request, username):
-    User = get_user_model()
+# def followers(request, username):
+#     User = get_user_model()
 
-    person = User.objects.get(username=username)
+#     person = User.objects.get(username=username)
+
+#     context = {
+#         'person': person,
+#     }
+#     return render(request,'accounts/followerlist.html', context)
+
+# def followings(request, username):
+#     User = get_user_model()
+#     person = User.objects.get(username=username)
+
+#     context = {
+#         'person': person,
+#     }
+#     return render(request,'accounts/followings.html', context)
+
+
+def follow_async(request, user_id, pfuser_id):
+    # context = {
+    #     'message': post_id,
+    # }
+    User = get_user_model()
+    user = request.user
+    pfuser = User.objects.get(id=pfuser_id)
+
+    if pfuser in user.followings.all():
+        user.followings.remove(pfuser)
+        status = False # 팔로우 취소
+        
+    else:
+        user.followings.add(pfuser)
+        status = True # 팔로우 실행
+        
 
     context = {
-        'person': person,
+        'status': status,
+        'count': len(pfuser.followers.all()),
+        
+        
     }
-    return render(request,'accounts/followers.html', context)
+    
+    return JsonResponse(context) # 문서를 return 하지 않고 그 데이터만 return 함.
 
-def followings(request, username):
-    User = get_user_model()
-    person = User.objects.get(username=username)
-
-    context = {
-        'person': person,
-    }
-    return render(request,'accounts/followings.html', context)

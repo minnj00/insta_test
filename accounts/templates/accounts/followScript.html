@@ -1,0 +1,52 @@
+<script>
+    const followButtons = document.querySelectorAll('i.follow')
+    // console.log(likeButtons)
+    followButtons.forEach((followButton)=>{
+        // console.log(likeButton)
+        followButton.addEventListener('click', (event)=>{
+            let userId = event.target.dataset.userId
+            let pfuserId = event.target.dataset.pfuserId
+            console.log(userId)
+            console.log(pfuserId)
+
+            followRequest(event.target, userId, pfuserId)
+            
+
+        })
+    })
+    // button, postId인자를 받는 함수 생성
+    let followRequest = async (button, userId, pfuserId) => {
+        console.log(button, userId, pfuserId)
+        // django 서버에 요청을 보낸다
+        let followURL = `/accounts/${pfuserId}/follow-async/${userId}/`
+        let response = await fetch(followURL)
+        let result = await response.json() 
+        console.log(result)
+
+        // fetch 라는 부분이 비 동기적으로 실행이 될 것임(url을 요청하는 것이 오래 걸려서) 그래서 await를 붙여서 잠깐 기다려주세요 라고 얘기
+        // await 는 async와 같이 사용가능함 
+
+        // 함수가 실행이 되면 likeURL을 만들고 response에 fetch(likeURL)을 저장한다
+        
+        
+        const followerNum = document.querySelector('i.follower')
+
+        // django 서버의 응답에 따라 좋아요 버튼을 수정한다.
+        if (result.status) {
+            button.classList.remove('btn-primary')
+            button.classList.add('btn-secondary')
+            button.innerHTML = 'following'
+            followerNum.innerHTML = result.count
+
+        } else {
+            button.classList.remove('btn-secondary')
+            button.classList.add('btn-primary')
+            button.innerHTML = 'follow'
+            followerNum.innerHTML = result.count
+            
+        }
+
+    }
+    
+    
+</script>

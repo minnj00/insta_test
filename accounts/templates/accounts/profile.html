@@ -2,48 +2,123 @@
 {% block body %}
     <div class="row">
         <div class="col-4">
-            <img src="{{user_info.profile_image.url}}"  class="img-fluid rounded-circle" alt="">
+            <img src="{{user_info.profile_image.url}}" style="margin-left:100px" class="img-fluid rounded-circle" alt="" width="200">
         </div>
-        <div class="col-8">
-            <div class="row">
-                <div class="col-3">
-                    <a href="">{{user_info.username}}</a>
+        <div class="col-7">
+            <div class="row" style="height:5em">
+                <div class="col-3" style="padding:1em ">
+                    <i>{{user_info.username}}</i>
                 </div>
                 {% if user != user_info %}
-                    <div class="col-4">
+                    <div class="col-4" style="padding:1em">
                         {% if user_info in user.followings.all %}
-                            <a href="{% url 'accounts:follow' username=user_info.username %}" class="btn btn-secondary btn-sm">팔로잉</a>
+                            <i class="btn btn-secondary btn-sm follow" data-user-id="{{user.id}}" data-pfuser-id="{{user_info.id}}">following</i>
                         {% else %}
-                            <a href="{% url 'accounts:follow' username=user_info.username %}" class="btn btn-primary btn-sm">팔로우</a>
+                            <i class="btn btn-primary btn-sm follow" data-user-id="{{user.id}}" data-pfuser-id="{{user_info.id}}">follow</i>
                         {% endif %}
-                    </div>    
+                    </div>
+                        
                 {% endif %}
             </div>
 
             <div class="row">
                 <div class="col">
-                    게시물 {{user_info.post_set.all|length}}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal3" >
+                        게시물 
+                    </button>
+                        <i class="post">{{user_info.post_set.all|length}}</i>
                 </div>
                 
                 <div class="col">
-                    <a href="{% url 'accounts:followers' username=user_info.username %}">팔로워</a>{{user_info.followers.all|length}}
+                    
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal1">
+                        팔로워 
+                    </button>
+                    <i class="follower">{{user_info.followers.all|length}}</i>
+                    
+                <!-- Modal -->
+                    <div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">팔로워</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% for follower in user_info.followers.all %}
+                                   <li><img src="{{follower.profile_image.url}}" width="50" class="img-fluid rounded-circle" alt=""> {{follower.username}}</li>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
-                    <a href="{% url 'accounts:followings' username=user_info.username %}">팔로잉</a>{{user_info.followings.all|length}}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Modal2">
+                        팔로잉
+                    </button>
+                    <i class="following">{{user_info.followings.all|length}}</i>
+                    
+                <!-- Modal -->
+                    <div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">팔로잉</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {% for following in user_info.followings.all %}
+                                   <li><img src="{{following.profile_image.url}}" width="50" class="img-fluid rounded-circle" alt=""> {{following.username}}</li>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+        
+                </div>
+            </div>
+            
+        </div>
+        <div style="border-top: solid 2px rgba(50,50,50,0.1); width: 100%">
+
+            <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin: 20px">
+                <div id="button_feed_list" style="cursor: pointer;margin: 0 30px;display: flex; flex-direction: row;align-items: center"> 
+                    <a class="nav-link "  href="{{post.image.url}}" > <i class="bi bi-grid"></i>내 게시물 </a>
                 </div>
             </div>
         </div>
-
         <div class="row row-cols-3">
             {% for post in user_info.post_set.all %}
 
                 <div class="col">
                     <div class="card">
                         <img src="{{post.image.url}}" alt="">
+                        {% if post in user.like_posts.all %}
+                            <i class="bi bi-heart-fill heart" style="color: red" data-post-id="{{post.id}}"><i class="likenumber" data-post-id ="{{post.id}}">{{post.like_users.all|length}}</i>
+                        </i>
+                        {% else %}
+                            <i class="bi bi-heart heart" data-post-id="{{post.id}}"><i class="likenumber" data-post-id ="{{post.id}}">{{post.like_users.all|length}}</i>
+                        </i>
+                        {% endif %}
+                        
+
                     </div>
                 </div>
             
             {% endfor %}
         </div>    
     </div>
+
+    {% include 'accounts/followScript.html' %}
+    {% include 'accounts/likeScript.html' %}
 {% endblock %}
