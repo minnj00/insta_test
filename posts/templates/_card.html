@@ -31,18 +31,17 @@
       {% endif %}
       <hr>
       {% for comment in post.comment_set.all %}
-        <li><img src="{{comment.user.profile_image.url}}" width="50" class="img-fluid rounded-circle" alt=""> {{comment.user}}: {{comment.content}}</li>
-        <li>
-          <div class="d-inline">
-            <div class="d-inline">
-              {{comment.user}} : {{comment.content}}
-            </div>
-            {% if user == comment.user %}
-              <button class="btn btn-warning btn-sm btn-update" data-comment-id="{{comment.id}}" data-post-id="{{post.id}}">수정</button>
-            {% endif %}
-          </div>
-        </li>
-      {% endfor %}
+            <li>
+                <div class="d-inline">
+                    <div class="d-inline">
+                        {{comment.user}} : {{comment.content}}
+                    </div>
+                    {% if user == comment.user %}
+                        <button class="btn btn-warning btn-sm btn-update" data-comment-id="{{comment.id}}" data-post-id="{{post.id}}">수정</button>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
 
     </div>
   </div>
