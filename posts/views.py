@@ -82,19 +82,20 @@ def like_async(request, post_id):
 
 def comment_update(request, post_id, id):
     comment = Comment.objects.get(id=id)
+
     if request.method == 'POST':
-        form = CommentForm(reequest.POST, instance=comment)
+        form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save()
             context = {
                 'newContent': comment.content,
                 'user': comment.user.username,
-
             }
-        else: 
+        else:
             context = {
                 'message': 'fail'
             }
+
         return JsonResponse(context)
     else:
         form = CommentForm(instance=comment)
